@@ -1,3 +1,3 @@
-# Simple Starter
+# gen-104
 
-Simple JS build starter for simple, client-only demos.
+WIP
