@@ -14,6 +14,22 @@ const config = {
     height: 0
 };
 
+function doubleExponentialSigmoid (x, a){
+
+    const epsilon = 0.00001;
+    const min_param_a = 0.0 + epsilon;
+    const max_param_a = 1.0 - epsilon;
+    a = Math.min(max_param_a, Math.max(min_param_a, a));
+    a = 1.0-a; // for sensible results
+
+    let y = 0;
+    if (x<=0.5){
+        y = (Math.pow(2.0*x, 1.0/a))/2.0;
+    } else {
+        y = 1.0 - (Math.pow(2.0*(1.0-x), 1.0/a))/2.0;
+    }
+    return y;
+}
 
 function shuffle(a) {
     let j, x, i;
@@ -212,7 +228,7 @@ domready(
             }
 
             const strength = 10
-            const ns = 0.001 + 0.005 * Math.random()
+            const ns = (0.001 + 0.005 * Math.random()) * 1.5
 
             const z0 = Math.random() * 10
             const z1 = Math.random() * 10
@@ -228,10 +244,12 @@ domready(
             const ry1 = Math.sin(angle2)
 
             const cx = width >> 1
-            const cy = width >> 1
+            const cy = height >> 1
 
-            let t0 = 0.1
-            const t1 = 0.9
+            let t0 = Math.random() * 0.5
+            let t1 = 0.5 + Math.random() * 0.5
+
+
 
             const td = (t1 - t0)/height
 
@@ -267,7 +285,7 @@ domready(
                     const [r0,g0,b0] = getSubPixelColor(src1, x1, y1)
                     const [r1,g1,b1] = getSubPixelColor(src2, x1, y1)
 
-                    const t = Math.pow(0.5 + 0.5 * nz, 2) * t0
+                    const t = doubleExponentialSigmoid(0.5 + 0.5 * nz, 0.666) * t0
                     //const t = 0.5 + 0.5 * nz
 
                     const r = Math.sqrt(r0 + (r1 - r0) * t)
